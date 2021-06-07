@@ -4,6 +4,5 @@ k8s
 ./orderwell
 orderwell
 .DS_Store
-kubernetes
 key.json
 ssl
