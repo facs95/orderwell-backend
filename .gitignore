@@ -2,7 +2,8 @@ k8s
 *.env
 .vscode
 ./orderwell
-orderwell
+orderwell-backend
 .DS_Store
 key.json
 ssl
+kubernetes

@@ -6,4 +6,4 @@ COPY . /app
 
 RUN go install
 
-CMD ["/go/bin/orderwell"]
+CMD ["/go/bin/orderwell-backend"]
