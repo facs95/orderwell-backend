@@ -1,76 +1,360 @@
-apiVersion: "apps/v1"
-kind: "Deployment"
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: "orderwell-backend"
-  namespace: "default"
+  annotations:
+    autopilot.gke.io/resource-adjustment: >-
+      {"input":{"containers":[{}]},"output":{"containers":[{"limits":{"cpu":"500m","ephemeral-storage":"1Gi","memory":"2Gi"},"requests":{"cpu":"500m","ephemeral-storage":"1Gi","memory":"2Gi"}}]},"modified":true}
   labels:
-    app: "orderwell-backend"
+    app: orderwell-backend
+    func: backend
+  managedFields:
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:labels':
+            .: {}
+            'f:app': {}
+            'f:func': {}
+        'f:spec':
+          'f:progressDeadlineSeconds': {}
+          'f:replicas': {}
+          'f:revisionHistoryLimit': {}
+          'f:selector':
+            'f:matchLabels':
+              .: {}
+              'f:app': {}
+              'f:func': {}
+          'f:strategy':
+            'f:rollingUpdate':
+              .: {}
+              'f:maxSurge': {}
+              'f:maxUnavailable': {}
+            'f:type': {}
+          'f:template':
+            'f:metadata':
+              'f:labels':
+                .: {}
+                'f:app': {}
+                'f:func': {}
+            'f:spec':
+              'f:containers':
+                'k:{"name":"orderwell-backend-1"}':
+                  .: {}
+                  'f:env':
+                    .: {}
+                    'k:{"name":"DB_HOST"}':
+                      .: {}
+                      'f:name': {}
+                      'f:valueFrom':
+                        .: {}
+                        'f:configMapKeyRef':
+                          .: {}
+                          'f:key': {}
+                          'f:name': {}
+                    'k:{"name":"DB_NAME"}':
+                      .: {}
+                      'f:name': {}
+                      'f:valueFrom':
+                        .: {}
+                        'f:configMapKeyRef':
+                          .: {}
+                          'f:key': {}
+                          'f:name': {}
+                    'k:{"name":"DB_PORT"}':
+                      .: {}
+                      'f:name': {}
+                      'f:valueFrom':
+                        .: {}
+                        'f:configMapKeyRef':
+                          .: {}
+                          'f:key': {}
+                          'f:name': {}
+                    'k:{"name":"DB_PW"}':
+                      .: {}
+                      'f:name': {}
+                      'f:valueFrom':
+                        .: {}
+                        'f:configMapKeyRef':
+                          .: {}
+                          'f:key': {}
+                          'f:name': {}
+                    'k:{"name":"DB_SSL"}':
+                      .: {}
+                      'f:name': {}
+                      'f:valueFrom':
+                        .: {}
+                        'f:configMapKeyRef':
+                          .: {}
+                          'f:key': {}
+                          'f:name': {}
+                    'k:{"name":"DB_USER"}':
+                      .: {}
+                      'f:name': {}
+                      'f:valueFrom':
+                        .: {}
+                        'f:configMapKeyRef':
+                          .: {}
+                          'f:key': {}
+                          'f:name': {}
+                    'k:{"name":"PORT"}':
+                      .: {}
+                      'f:name': {}
+                      'f:valueFrom':
+                        .: {}
+                        'f:configMapKeyRef':
+                          .: {}
+                          'f:key': {}
+                          'f:name': {}
+                  'f:image': {}
+                  'f:imagePullPolicy': {}
+                  'f:name': {}
+                  'f:resources': {}
+                  'f:terminationMessagePath': {}
+                  'f:terminationMessagePolicy': {}
+              'f:dnsPolicy': {}
+              'f:restartPolicy': {}
+              'f:schedulerName': {}
+              'f:securityContext': {}
+              'f:terminationGracePeriodSeconds': {}
+      manager: GoogleCloudConsole
+      operation: Update
+      time: '2021-06-07T23:08:32Z'
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:annotations':
+            'f:deployment.kubernetes.io/revision': {}
+        'f:status':
+          'f:conditions':
+            .: {}
+            'k:{"type":"Available"}':
+              .: {}
+              'f:lastTransitionTime': {}
+              'f:lastUpdateTime': {}
+              'f:message': {}
+              'f:reason': {}
+              'f:status': {}
+              'f:type': {}
+            'k:{"type":"Progressing"}':
+              .: {}
+              'f:lastTransitionTime': {}
+              'f:lastUpdateTime': {}
+              'f:message': {}
+              'f:reason': {}
+              'f:status': {}
+              'f:type': {}
+          'f:observedGeneration': {}
+          'f:replicas': {}
+          'f:unavailableReplicas': {}
+          'f:updatedReplicas': {}
+      manager: kube-controller-manager
+      operation: Update
+      time: '2021-06-07T23:14:18Z'
+  name: orderwell-backend
+  namespace: default
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
-      app: "orderwell-backend"
+      app: orderwell-backend
+      func: backend
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
   template:
     metadata:
       labels:
-        app: "orderwell-backend"
+        app: orderwell-backend
+        func: backend
     spec:
       containers:
-      - name: "orderwell-backend-1"
-        image: "gcr.io/orderwell-dev/github.com/facs95/orderwell-backend:$SHORT_SHA"
-        env:
-        - name: "DB_HOST"
-          valueFrom:
-            configMapKeyRef:
-              key: "DB_HOST"
-              name: "orderwell-backend-config-ubx1"
-        - name: "DB_NAME"
-          valueFrom:
-            configMapKeyRef:
-              key: "DB_NAME"
-              name: "orderwell-backend-config-ubx1"
-        - name: "DB_USER"
-          valueFrom:
-            configMapKeyRef:
-              key: "DB_USER"
-              name: "orderwell-backend-config-ubx1"
-        - name: "DB_PORT"
-          valueFrom:
-            configMapKeyRef:
-              key: "DB_PORT"
-              name: "orderwell-backend-config-ubx1"
-        - name: "DB_PW"
-          valueFrom:
-            configMapKeyRef:
-              key: "DB_PW"
-              name: "orderwell-backend-config-ubx1"
-        - name: "DB_SSL"
-          valueFrom:
-            configMapKeyRef:
-              key: "DB_SSL"
-              name: "orderwell-backend-config-ubx1"
-        - name: "PORT"
-          valueFrom:
-            configMapKeyRef:
-              key: "PORT"
-              name: "orderwell-backend-config-ubx1"
+        - env:
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  key: DB_HOST
+                  name: orderwell-backend-config-cekt
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  key: DB_NAME
+                  name: orderwell-backend-config-cekt
+            - name: DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  key: DB_USER
+                  name: orderwell-backend-config-cekt
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: DB_PORT
+                  name: orderwell-backend-config-cekt
+            - name: DB_PW
+              valueFrom:
+                configMapKeyRef:
+                  key: DB_PW
+                  name: orderwell-backend-config-cekt
+            - name: DB_SSL
+              valueFrom:
+                configMapKeyRef:
+                  key: DB_SSL
+                  name: orderwell-backend-config-cekt
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: PORT
+                  name: orderwell-backend-config-cekt
+          image: gcr.io/orderwell-dev/github.com/facs95/orderwell-backend
+          imagePullPolicy: IfNotPresent
+          name: orderwell-backend-1
+          resources:
+            limits:
+              cpu: 500m
+              ephemeral-storage: 1Gi
+              memory: 2Gi
+            requests:
+              cpu: 500m
+              ephemeral-storage: 1Gi
+              memory: 2Gi
+          securityContext:
+            capabilities:
+              drop:
+                - NET_RAW
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
 ---
-apiVersion: "autoscaling/v2beta1"
-kind: "HorizontalPodAutoscaler"
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
 metadata:
-  name: "orderwell-backend-hpa-h6hq"
-  namespace: "default"
   labels:
-    app: "orderwell-backend"
+    app: orderwell-backend
+    func: backend
+  managedFields:
+    - apiVersion: autoscaling/v2beta1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:labels':
+            .: {}
+            'f:app': {}
+            'f:func': {}
+        'f:spec':
+          'f:maxReplicas': {}
+          'f:metrics': {}
+          'f:minReplicas': {}
+          'f:scaleTargetRef':
+            'f:apiVersion': {}
+            'f:kind': {}
+            'f:name': {}
+      manager: GoogleCloudConsole
+      operation: Update
+      time: '2021-05-27T12:15:23Z'
+    - apiVersion: autoscaling/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:annotations':
+            .: {}
+            'f:autoscaling.alpha.kubernetes.io/conditions': {}
+            'f:autoscaling.alpha.kubernetes.io/current-metrics': {}
+        'f:status':
+          'f:currentCPUUtilizationPercentage': {}
+          'f:currentReplicas': {}
+          'f:desiredReplicas': {}
+          'f:lastScaleTime': {}
+      manager: vpa-recommender
+      operation: Update
+      time: '2021-05-27T12:22:33Z'
+    - apiVersion: autoscaling/v2beta1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:annotations':
+            'f:kubectl.kubernetes.io/last-applied-configuration': {}
+      manager: kubectl-client-side-apply
+      operation: Update
+      time: '2021-06-07T22:30:59Z'
+  name: orderwell-backend-hpa-osul
+  namespace: default
 spec:
-  scaleTargetRef:
-    kind: "Deployment"
-    name: "orderwell-backend"
-    apiVersion: "apps/v1"
-  minReplicas: 1
   maxReplicas: 5
   metrics:
-  - type: "Resource"
-    resource:
-      name: "cpu"
-      targetAverageUtilization: 80
+    - resource:
+        name: cpu
+        targetAverageUtilization: 80
+      type: Resource
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: orderwell-backend
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    cloud.google.com/neg: '{"ingress":true}'
+    cloud.google.com/neg-status: >-
+      {"network_endpoint_groups":{"80":"k8s1-faed979e-default-orderwell-backend-service-80-bf311653"},"zones":["us-central1-b","us-central1-f"]}
+  labels:
+    app: orderwell-backend
+    func: backend
+  managedFields:
+    - apiVersion: v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:labels':
+            .: {}
+            'f:app': {}
+            'f:app.kubernetes.io/managed-by': {}
+            'f:app.kubernetes.io/name': {}
+            'f:app.kubernetes.io/version': {}
+            'f:func': {}
+        'f:spec':
+          'f:externalTrafficPolicy': {}
+          'f:ports':
+            .: {}
+            'k:{"port":80,"protocol":"TCP"}':
+              .: {}
+              'f:port': {}
+              'f:protocol': {}
+              'f:targetPort': {}
+          'f:selector':
+            .: {}
+            'f:app': {}
+            'f:func': {}
+          'f:sessionAffinity': {}
+          'f:type': {}
+      manager: GoogleCloudConsole
+      operation: Update
+      time: '2021-05-27T13:02:11Z'
+    - apiVersion: v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:annotations':
+            'f:cloud.google.com/neg-status': {}
+      manager: glbc
+      operation: Update
+      time: '2021-05-27T13:09:46Z'
+  name: orderwell-backend-service
+  namespace: default
+spec:
+  clusterIP: 10.8.129.81
+  externalTrafficPolicy: Cluster
+  ports:
+    - nodePort: 30845
+      port: 80
+      protocol: TCP
+      targetPort: 8000
+  selector:
+    app: orderwell-backend
+    func: backend
+  sessionAffinity: None
+  type: NodePort
