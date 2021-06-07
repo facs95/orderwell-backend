@@ -27,7 +27,7 @@ func main() {
 	httpRouter.UseCors()
 
 	httpRouter.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, "Hello, welcome to Orderwell API 👋!")
+		fmt.Fprintln(w, "Te amo chaparra 👋!")
 	})
 
 	httpRouter.Post("/create-tenant", controller.CreateTenant)
